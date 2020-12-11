@@ -15,7 +15,7 @@ exports.up = function (knex) {
         .createTable("tasks", (tbl) => {
             tbl.increments().unique();
             tbl.string("description", 350).notNullable();
-            tbl.string("notes", 120);
+            tbl.string("notes", 120)
             tbl.boolean("completed").defaultTo(false).notNullable();
             tbl
                 .integer("project_id")

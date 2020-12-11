@@ -11,7 +11,6 @@ const router = express.Router()
 
 
 router.get('/', (req, res) => {
-    console.log(req.body)
     Task.getTask()
         .then(task => {
             task.forEach(project => {
@@ -23,18 +22,34 @@ router.get('/', (req, res) => {
         })
         .catch(err => res.status(500).json({ message: err.message }))
 })
+router.get('/:id', (req, res) => {
+    Task.getTaskbyId(req.params.id)
+        .then(resp => {
+
+            const bool = resp[0].completed
+            const newBool = bool ? true : false
+            resp[0].completed = newBool
+            console.log(resp)
+            res.status(200).json(resp)
+
+
+        })
+        .catch(err => res.status(500).json({ message: err.message }))
+})
 router.post('/', (req, res) => {
-    Task.createTask(req.body)
-        .then(task => {
+
+   Task.createTask(req.body)
+        .then(task => { 
+
             if (task) {
-                const bool = req.body.completed
+                const bool = task[0].completed
                 const newBool = bool ? true : false
-                req.body.completed = newBool
-                res.status(201).json(req.body)
+                task[0].completed = newBool
+                res.status(201).json(task[0])
             }
             else {
-                res.status(404).json({ message: 'tets' })
-            }
+                res.status(404).json({ message: 'sorry something went wrong' })
+            } 
         })
         .catch(err => res.status(500).json({ message: err.message }))
 })
